@@ -1,0 +1,15 @@
+{
+  "apps": [
+    {
+      "name": "am-i-a-42-student",
+      "script": "app.js",
+      "exec_mode": "fork",
+      "instances": 1,
+      "env": {
+        "PORT": "4200",
+        "CLIENT_ID": "",
+        "CLIENT_SECRET": ""
+      }
+    }
+  ]
+}

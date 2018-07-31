@@ -1,0 +1,28 @@
+{
+  "name": "42student",
+  "version": "1.0.0",
+  "description": "A web application using 42 api to check if a login from 42 is a student",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/Eywek/am-i-a-42-student.git"
+  },
+  "author": "Eywek <contact@eywek.fr>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Eywek/42student/issues"
+  },
+  "homepage": "https://github.com/Eywek/42student#readme",
+  "dependencies": {
+    "debug": "^3.1.0",
+    "koa": "^2.5.2",
+    "koa-json": "^2.0.2",
+    "koa-router": "^7.4.0",
+    "koa-static-server": "^1.3.4",
+    "request": "^2.87.0",
+    "request-promise-native": "^1.0.5"
+  }
+}

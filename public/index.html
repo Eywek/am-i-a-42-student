@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!-- Standard Meta -->
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+    <!-- Site Properties -->
+    <title>Am I a student ? - 42school</title>
+
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.3/semantic.min.css">
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+      crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.3/semantic.min.js"></script>
+
+    <style type="text/css">
+      body {
+        background-color: #DADADA;
+      }
+
+      body>.grid {
+        height: 100%;
+      }
+
+      .image {
+        margin-top: -100px;
+      }
+
+      .column {
+        max-width: 450px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="ui middle aligned center aligned grid">
+      <div class="column">
+        <h2 class="ui black image header">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/8/8d/42_Logo.svg" class="image">
+          <div class="content">
+            Am I a student at 42 ?
+          </div>
+        </h2>
+        <form class="ui large form">
+          <div class="ui stacked segment">
+            <div class="field">
+              <div class="ui left icon input">
+                <i class="user icon"></i>
+                <input type="text" name="login" placeholder="42 login">
+              </div>
+            </div>
+            <div class="ui fluid large black submit button">Check</div>
+          </div>
+
+          <div class="ui error message"></div>
+          <div class="ui success message"></div>
+
+        </form>
+
+      </div>
+    </div>
+    <script>
+      $(document).ready(function () {
+        $('.ui.form').form({
+          fields: {
+            login: {
+              identifier: 'login',
+              rules: [
+                {
+                  type: 'empty',
+                  prompt: 'Please enter your login'
+                }
+              ]
+            },
+          }
+        })
+        $('.ui.form').on('submit', function (e) {
+          e.preventDefault()
+          var form = $(this)
+          $('.ui.error.message, .ui.success.message').html('')
+          form.removeClass('error').removeClass('success')
+          $('.button').addClass('loading')
+          var login = form.find('input[name="login"]').val()
+
+          $.get({
+            url: `/api/${login}`,
+            success: function (res) {
+              if (res.is_student) {
+                form.addClass('success')
+                return $('.ui.success.message').html(`${login} is a student from ${res.pool.month} ${res.pool.year} pool!`)
+              }
+              form.addClass('error')
+              var message = `${login} (pool ${res.pool.month} ${res.pool.year}) is not a student!`
+              var poolEnd = new Date(res.pool.end).getTime() + (14 * 24 * 60 * 60 * 1000) // wait 14 days
+              if (new Date().getTime() < poolEnd) {
+                message += ' But wait! You need to wait ~14 days after your pool to get the results.'
+              }
+
+              return $('.ui.error.message').html(message)
+            },
+            error: function (res) {
+              form.addClass('error')
+              if (res.status == 404) {
+                return $('.ui.error.message').html('No user was found with this login.')
+              }
+              return $('.ui.error.message').html(`An internal error has occured (maybe rate limited :c).`)
+            },
+            complete: function () {
+              $('.button').removeClass('loading')
+            }
+          })
+        })
+      })
+    </script>
+  </body>
+</html>
